@@ -8,7 +8,7 @@ services:
     environment:
       PROXY_BACKEND_1: /docker:http://hub.docker.com
       PROXY_BACKEND_2: /duck:http://duckduckgo.com/
-      PROXY_BACKEND_3: /:http://test.com/
+      SHORT_DNS_TTL: "yes"
 
     volumes:
       - ./setup-proxy-config.sh:/docker-entrypoint.d/99-setup-proxy-config.sh
