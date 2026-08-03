@@ -1,0 +1,17 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - "v*"
+
+jobs:
+  docker:
+    uses: donuk/github-build-to-dockerhub/.github/workflows/docker-publish.yml@master
+    with:
+      image_name: donuk/httpurlbasedproxy
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
