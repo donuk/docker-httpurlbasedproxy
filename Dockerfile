@@ -1,4 +1,4 @@
-FROM nginx:1.30.6
+FROM nginx:1.31.8
 
 ENV DOMAIN=self-signed-ssl
 ENV BACKEND=BACKEND-NOT-CONFIGURED
