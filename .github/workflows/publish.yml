@@ -11,38 +11,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  smoke-test:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Check out source
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build image for testing
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          load: true
-          tags: smoke-test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Smoke test
-        run: |
-          docker run --rm \
-            -e PROXY_BACKEND_1=/docker:http://127.0.0.1:8080 \
-            -e PROXY_BACKEND_2=/duck:http://127.0.0.1:8081/duck/ \
-            smoke-test nginx -t
-
   docker:
-    needs: smoke-test
     uses: donuk/github-build-to-dockerhub/.github/workflows/docker-publish.yml@master
     with:
       image_name: donuk/httpurlbasedproxy
+      test_script: |
+        export PROXY_BACKEND_1=/docker:http://127.0.0.1:8080
+        export PROXY_BACKEND_2=/duck:http://127.0.0.1:8081/duck/
+        /docker-entrypoint.sh nginx -t
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
